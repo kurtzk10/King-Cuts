@@ -22,9 +22,15 @@ class _AboutUsPageState extends State<AboutUsPage> {
   ];
 
   String? selectedImage;
+  int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isWide = screenWidth > 600;
+    final horizontalPadding = screenWidth * 0.05;
+
     return Scaffold(
       appBar: AppBar(
         forceMaterialTransparency: true,
@@ -49,235 +55,291 @@ class _AboutUsPageState extends State<AboutUsPage> {
       ),
       body: Stack(
         children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 50,
-                  child: Row(
-                    children: [
-                      IconButton(
-                        style: ButtonStyle(
-                          overlayColor: WidgetStateProperty.all(
-                            Colors.transparent,
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ServicePage(email: email),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          style: ButtonStyle(
+                            overlayColor: WidgetStateProperty.all(
+                              Colors.transparent,
                             ),
-                          );
-                        },
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: Color(0xff6a0dad),
-                          size: 32,
-                        ),
-                      ),
-                      Text(
-                        'Services',
-                        style: TextStyle(
-                          fontFamily: 'Source Serif',
-                          color: Color(0xff6a0dad),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                CarouselSlider(
-                  options: CarouselOptions(
-                    height: 300,
-                    viewportFraction: 1,
-                    autoPlay: true,
-                    autoPlayCurve: Curves.fastOutSlowIn,
-                    enableInfiniteScroll: true,
-                    autoPlayAnimationDuration: Duration(milliseconds: 800),
-                  ),
-                  items: images.map((i) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedImage = i;
-                            });
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: Image.asset(i, fit: BoxFit.cover),
                           ),
-                        );
-                      },
-                    );
-                  }).toList(),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20),
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 10),
-                          child: Text(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ServicePage(email: email),
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: Color(0xff6a0dad),
+                            size: 32,
+                          ),
+                        ),
+                        Text(
+                          'Services',
+                          style: TextStyle(
+                            fontFamily: 'Source Serif',
+                            color: Color(0xff6a0dad),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: horizontalPadding,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: screenHeight * 0.02),
+                          Stack(
+                            children: [
+                              CarouselSlider(
+                                options: CarouselOptions(
+                                  height: isWide
+                                      ? screenHeight * .5
+                                      : screenHeight * 0.35,
+                                  viewportFraction: 1,
+                                  autoPlay: true,
+                                  autoPlayCurve: Curves.fastOutSlowIn,
+                                  enableInfiniteScroll: true,
+                                  autoPlayAnimationDuration: Duration(
+                                    milliseconds: 800,
+                                  ),
+                                  onPageChanged: (index, reason) {
+                                    setState(() {
+                                      currentIndex = index;
+                                    });
+                                  },
+                                ),
+                                items: images.map((i) {
+                                  return Builder(
+                                    builder: (BuildContext context) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedImage = i;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: isWide ? 500 : screenWidth,
+                                          child: Image.asset(
+                                            i,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }).toList(),
+                              ),
+                              Positioned(
+                                bottom: screenHeight * 0.01,
+                                left: 0,
+                                right: 0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: images.asMap().entries.map((entry) {
+                                    return Container(
+                                      width: isWide ? 8 : screenWidth * 0.02,
+                                      height: isWide ? 8 : screenWidth * 0.02,
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: currentIndex == entry.key
+                                            ? Colors.white
+                                            : Color(0x71ffffff),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: screenHeight * 0.03),
+                          Text(
                             'King Cuts',
                             style: TextStyle(
                               fontFamily: 'Judson',
-                              fontSize: 36,
+                              fontSize: isWide ? 36 : 28,
                               fontWeight: FontWeight.bold,
                               height: 1.0,
                             ),
                           ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Angeles Branch',
-                          style: TextStyle(
-                            fontFamily: 'Judson',
-                            fontSize: 36,
-                            fontWeight: FontWeight.bold,
-                            height: 1.0,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 25),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.access_time_filled,
-                            color: Color(0xff6a0Dad),
-                            size: 24,
-                          ),
-                          SizedBox(width: 5),
                           Text(
-                            '9:30AM-8:00PM | Mon - Fri',
+                            'Angeles Branch',
                             style: TextStyle(
-                              fontFamily: 'Source Serif',
-                              fontSize: 18,
+                              fontFamily: 'Judson',
+                              fontSize: isWide ? 36 : 28,
+                              fontWeight: FontWeight.bold,
+                              height: 1.0,
                             ),
                           ),
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.location_pin,
-                            color: Color(0xff6a0Dad),
-                            size: 24,
-                          ),
-                          SizedBox(width: 5),
-                          Expanded(
-                            child: Text(
-                              '2098 Razor Avenue, Ultimate Mall\nAngeles, Central Luzon 2009',
-                              style: TextStyle(
-                                fontFamily: 'Source Serif',
-                                fontSize: 18,
+                          SizedBox(height: screenHeight * 0.025),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.access_time_filled,
+                                color: Color(0xff6a0Dad),
+                                size: isWide ? 20 : screenWidth * 0.06,
                               ),
-                            ),
+                              SizedBox(width: 5),
+                              Text(
+                                '9:30AM-8:00PM | Mon - Fri',
+                                style: TextStyle(
+                                  fontFamily: 'Source Serif',
+                                  fontSize: isWide ? 18 : 16,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 25),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 10),
-                          child: Text(
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.location_pin,
+                                color: Color(0xff6a0Dad),
+                                size: isWide ? 20 : screenWidth * 0.06,
+                              ),
+                              SizedBox(width: 5),
+                              Expanded(
+                                child: Text(
+                                  '2098 Razor Avenue, Ultimate Mall\nAngeles, Central Luzon 2009',
+                                  style: TextStyle(
+                                    fontFamily: 'Source Serif',
+                                    fontSize: isWide ? 18 : 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: screenHeight * 0.03),
+                          Text(
                             'Contact Us',
                             style: TextStyle(
                               fontFamily: 'Source Serif',
                               color: Color(0xff6a0dad),
-                              fontSize: 28,
+                              fontSize: isWide ? 28 : 22,
                               fontWeight: FontWeight.bold,
                               height: 1.0,
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.phone_rounded,
-                            color: Color(0xff6a0Dad),
-                            size: 24,
+                          SizedBox(height: screenHeight * 0.015),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.phone_rounded,
+                                color: Color(0xff6a0Dad),
+                                size: isWide ? 20 : screenWidth * 0.06,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                '0945 526 1300',
+                                style: TextStyle(
+                                  fontFamily: 'Source Serif',
+                                  fontSize: isWide ? 18 : 16,
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(width: 5),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.mail,
+                                color: Color(0xff6a0Dad),
+                                size: isWide ? 20 : screenWidth * 0.06,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                'kingcuts@gmail.com',
+                                style: TextStyle(
+                                  fontFamily: 'Source Serif',
+                                  fontSize: isWide ? 18 : 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: screenHeight * 0.03),
                           Text(
-                            '0945 526 1300',
-                            style: TextStyle(
-                              fontFamily: 'Source Serif',
-                              fontSize: 18,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Icon(Icons.mail, color: Color(0xff6a0Dad), size: 24),
-                          SizedBox(width: 5),
-                          Text(
-                            'kingcuts@gmail.com',
-                            style: TextStyle(
-                              fontFamily: 'Source Serif',
-                              fontSize: 18,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 25),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 10),
-                          child: Text(
                             'Know our Barbers',
                             style: TextStyle(
                               fontFamily: 'Source Serif',
                               color: Color(0xff6a0dad),
-                              fontSize: 28,
+                              fontSize: isWide ? 28 : 22,
                               fontWeight: FontWeight.bold,
                               height: 1.0,
                             ),
                           ),
-                        ),
+                          SizedBox(height: screenHeight * 0.015),
+                          buildInstagramRow(
+                            'Icent',
+                            'd00bleo',
+                            screenWidth,
+                            isWide,
+                          ),
+                          buildInstagramRow(
+                            'Keane',
+                            'gels_keane',
+                            screenWidth,
+                            isWide,
+                          ),
+                          buildInstagramRow(
+                            'Kian',
+                            'kiaannpp',
+                            screenWidth,
+                            isWide,
+                          ),
+                          buildInstagramRow(
+                            'Kurt',
+                            'kurtzkuwu',
+                            screenWidth,
+                            isWide,
+                          ),
+                          SizedBox(height: screenHeight * 0.03),
+                        ],
                       ),
-                      SizedBox(height: 10),
-                      // Example barber buttons
-                      buildInstagramRow('Icent', 'd00bleo'),
-                      buildInstagramRow('Keane', 'gels_keane'),
-                      buildInstagramRow('Kian', 'kiaannpp'),
-                      buildInstagramRow('Kurt', 'kurtzkuwu'),
-                      SizedBox(height: 20),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
-          // Overlay
           if (selectedImage != null)
             Container(
               color: Color(0xe6000000),
               child: Stack(
                 children: [
                   Center(
-                    child: InteractiveViewer(
-                      child: Image.asset(selectedImage!),
+                    child: Padding(
+                      padding: isWide
+                          ? EdgeInsets.symmetric(vertical: 50)
+                          : EdgeInsets.zero,
+                      child: InteractiveViewer(
+                        child: Image.asset(selectedImage!, fit: BoxFit.contain),
+                      ),
                     ),
                   ),
                   Positioned(
-                    top: 40,
-                    right: 20,
+                    top: screenHeight * 0.05,
+                    right: screenWidth * 0.05,
                     child: IconButton(
-                      icon: Icon(Icons.close, color: Colors.white, size: 32),
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: isWide ? 30 : screenWidth * 0.08,
+                      ),
                       onPressed: () {
                         setState(() {
                           selectedImage = null;
@@ -293,10 +355,20 @@ class _AboutUsPageState extends State<AboutUsPage> {
     );
   }
 
-  Widget buildInstagramRow(String name, String username) {
+  Widget buildInstagramRow(
+    String name,
+    String username,
+    double screenWidth,
+    bool isWide,
+  ) {
     return Row(
       children: [
-        Icon(Icons.link, color: Color(0xff6a0Dad), size: 24),
+        Icon(
+          Icons.link,
+          color: Color(0xff6a0Dad),
+          size: isWide ? 20 : screenWidth * 0.06,
+        ),
+        SizedBox(width: 8),
         TextButton(
           style: ButtonStyle(
             padding: WidgetStateProperty.all(EdgeInsets.zero),
@@ -321,7 +393,8 @@ class _AboutUsPageState extends State<AboutUsPage> {
             name,
             style: TextStyle(
               fontFamily: 'Source Serif',
-              fontSize: 18,
+              fontSize: isWide ? 18 : 16,
+              color: Color(0xff6a0dad),
               fontWeight: FontWeight.bold,
               decoration: TextDecoration.underline,
               decorationColor: Color(0xff6a0dad),

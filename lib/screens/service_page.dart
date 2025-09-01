@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:kingscut/screens/about_us.dart';
+import 'package:kingscut/screens/reviews.dart';
 
 class ServicePage extends StatelessWidget {
   final String? email;
 
-  const ServicePage({required this.email});
+  const ServicePage({required this.email, super.key});
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         forceMaterialTransparency: true,
         leading: Container(
-          margin: EdgeInsets.only(left: 6, top: 11),
+          margin: const EdgeInsets.only(left: 6, top: 11),
           child: Image.asset('assets/logo_black.png', height: 20, width: 20),
         ),
         leadingWidth: 50,
         toolbarHeight: 70,
         titleSpacing: 0,
-        title: Padding(
+        title: const Padding(
           padding: EdgeInsets.only(top: 12),
-          child: const Text(
+          child: Text(
             "King Cuts",
             style: TextStyle(
               fontFamily: 'Judson',
@@ -32,88 +36,41 @@ class ServicePage extends StatelessWidget {
       ),
 
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
+        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 16),
+        child: Center(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final isWide = constraints.maxWidth > 600;
 
-          children: [
-            SizedBox(height: 50),
-            Center(
-              child: GestureDetector(
-                onTap: () {},
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              return Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: isWide ? screenHeight * 0.1 : 0,
+                ),
+                child: Wrap(
+                  spacing: 20,
+                  runSpacing: 20,
+                  alignment: WrapAlignment.center,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12.5),
-                      child: Image.asset(
-                        'assets/classic-haircut.jpg',
-                        width: 250,
-                      ),
+                    ServiceCard(
+                      title: "Classic Haircut",
+                      imagePath: "assets/classic-haircut.jpg",
+                      width: isWide ? screenWidth * 0.25 : screenWidth * 0.6,
                     ),
-                    Text(
-                      'Classic Haircut',
-                      style: TextStyle(
-                        fontFamily: 'Source Serif',
-                        color: Color(0xff6a0dad),
-                        fontSize: 20,
-                      ),
+                    ServiceCard(
+                      title: "Beard Grooming",
+                      imagePath: "assets/beard-grooming.jpg",
+                      width: isWide ? screenWidth * 0.25 : screenWidth * 0.6,
                     ),
-                    SizedBox(height: 10),
+                    ServiceCard(
+                      title: "Tailored Cut",
+                      imagePath: "assets/tailored-cut.jpg",
+                      width: isWide ? screenWidth * 0.25 : screenWidth * 0.6,
+                    ),
                   ],
                 ),
-              ),
-            ),
-            Center(
-              child: GestureDetector(
-                onTap: () {},
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12.5),
-                      child: Image.asset('assets/beard-grooming.jpg', width: 250),
-                    ),
-                    Text(
-                      'Beard Grooming',
-                      style: TextStyle(
-                        fontFamily: 'Source Serif',
-                        color: Color(0xff6a0dad),
-                        fontSize: 20,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                  ],
-                ),
-              ),
-            ),
-            Center(
-              child: GestureDetector(
-                onTap: () {},
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12.5),
-                      child: Image.asset(
-                        'assets/tailored-cut.jpg',
-                        width: 250,
-                      ),
-                    ),
-                    Text(
-                      'Tailored Cut',
-                      style: TextStyle(
-                        fontFamily: 'Source Serif',
-                        color: Color(0xff6a0dad),
-                        fontSize: 20,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                  ],
-                ),
-              ),
-            ),
-          ],
+              );
+            },
+          ),
         ),
       ),
 
@@ -122,34 +79,11 @@ class ServicePage extends StatelessWidget {
         color: Colors.transparent,
         elevation: 0,
         child: Padding(
-          padding: EdgeInsetsGeometry.symmetric(horizontal: 25),
+          padding: const EdgeInsets.symmetric(horizontal: 25),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TextButton(
-                style: ButtonStyle(
-                  padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.zero),
-                  minimumSize: WidgetStateProperty.all<Size>(Size.zero),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  overlayColor: WidgetStateProperty.all<Color>(
-                    Colors.transparent,
-                  ),
-                  backgroundColor: WidgetStateProperty.all<Color>(
-                    Colors.transparent,
-                  ),
-                ),
-                child: Text(
-                  'About Us',
-                  style: TextStyle(
-                    fontFamily: 'Source Serif',
-                    color: Color(0xFF6a0dad),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline,
-                    decorationColor: Color(0xff6a0dad),
-                  ),
-                ),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -158,21 +92,11 @@ class ServicePage extends StatelessWidget {
                     ),
                   );
                 },
-              ),
-              TextButton(
                 style: ButtonStyle(
-                  padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.zero),
-                  minimumSize: WidgetStateProperty.all<Size>(Size.zero),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  overlayColor: WidgetStateProperty.all<Color>(
-                    Colors.transparent,
-                  ),
-                  backgroundColor: WidgetStateProperty.all<Color>(
-                    Colors.transparent,
-                  ),
+                  overlayColor: WidgetStateColor.transparent,
                 ),
-                child: Text(
-                  'Reviews',
+                child: const Text(
+                  "About Us",
                   style: TextStyle(
                     fontFamily: 'Source Serif',
                     color: Color(0xFF6a0dad),
@@ -182,11 +106,76 @@ class ServicePage extends StatelessWidget {
                     decorationColor: Color(0xff6a0dad),
                   ),
                 ),
-                onPressed: () {},
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReviewsPage(email: email),
+                    ),
+                  );
+                },
+                style: ButtonStyle(
+                  overlayColor: WidgetStateColor.transparent,
+                ),
+                child: const Text(
+                  "Reviews",
+                  style: TextStyle(
+                    fontFamily: 'Source Serif',
+                    color: Color(0xFF6a0dad),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                    decorationColor: Color(0xff6a0dad),
+                  ),
+                ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ServiceCard extends StatelessWidget {
+  final String title;
+  final String imagePath;
+  final double width;
+
+  const ServiceCard({
+    super.key,
+    required this.title,
+    required this.imagePath,
+    required this.width,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {},
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12.5),
+            child: Image.asset(
+              imagePath,
+              width: width.clamp(200, 300),
+              fit: BoxFit.cover,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            title,
+            style: TextStyle(
+              fontFamily: 'Source Serif',
+              color: const Color(0xff6a0dad),
+              fontSize: MediaQuery.of(context).size.width > 600 ? 22 : 18,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
       ),
     );
   }
