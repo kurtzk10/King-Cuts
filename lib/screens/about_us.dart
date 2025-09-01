@@ -72,8 +72,10 @@ class _AboutUsPageState extends State<AboutUsPage> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => ServicePage(email: email),
+                              PageRouteBuilder(
+                                pageBuilder: (_, __, ___) =>
+                                    ServicePage(email: email),
+                                transitionDuration: Duration.zero,
                               ),
                             );
                           },

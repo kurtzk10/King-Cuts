@@ -25,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
     final isWide = screenWidth > 600;
 
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         forceMaterialTransparency: true,
         leading: Container(
@@ -56,7 +57,16 @@ class _LoginPageState extends State<LoginPage> {
               child: IntrinsicHeight(
                 child: Container(
                   child: showAccountList
-                      ? _buildAccountList(isWide, screenWidth)
+                      ? Center(child: _buildAccountList(isWide, screenWidth))
+                      : isWide 
+                      ? Center( child: SingleChildScrollView(
+                          child: _buildLoginCard(
+                            isWide,
+                            screenWidth,
+                            screenHeight,
+                          ),
+                        ),
+                      )
                       : SingleChildScrollView(
                           child: _buildLoginCard(
                             isWide,
@@ -101,8 +111,17 @@ class _LoginPageState extends State<LoginPage> {
           height: cardHeight,
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
+            color: Colors.grey[50],
             border: Border.all(color: Color(0xff6a0dad), width: 1),
             borderRadius: BorderRadius.circular(12.5),
+            boxShadow: [
+              BoxShadow(
+                color: Color(0x88888888),
+                offset: Offset(0, 5),
+                blurRadius: 10,
+                spreadRadius: 2,
+              ),
+            ],
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -125,7 +144,6 @@ class _LoginPageState extends State<LoginPage> {
                   color: Color(0xff6a0dad),
                   fontSize: isWide ? 14 : 12,
                   fontWeight: FontWeight.normal,
-                  decoration: TextDecoration.underline,
                   decorationColor: Color(0xff6a0dad),
                 ),
               ),
@@ -163,7 +181,6 @@ class _LoginPageState extends State<LoginPage> {
                             color: Color(0xff6a0dad),
                             width: 2,
                           ),
-                          borderRadius: BorderRadius.circular(12.5),
                         ),
                       ),
                       validator: (value) =>
@@ -173,24 +190,43 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       width: isWide ? 220 : 200,
                       height: 50,
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          side: BorderSide(color: Color(0xff6a0dad), width: 1),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0x88888888),
+                              offset: Offset(2, 5),
+                              blurRadius: 10,
+                              spreadRadius: 2,
+                            )
+                          ]
                         ),
-                        child: const Text('Login'),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ServicePage(email: account['email']),
-                              ),
-                            );
-                          }
-                        },
-                      ),
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor: Color(0xff6a0dad),
+                            side: BorderSide(color: Color(0xff6a0dad), width: 1),
+                          ),
+                          child: const Text(
+                            'Login',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) => ServicePage(
+                                    email: account['email']
+                                  ),
+                                  transitionDuration: Duration.zero,
+                                )
+                              );
+                            }
+                          },
+                        ),
+                      )
                     ),
                   ],
                 ),
@@ -209,6 +245,7 @@ class _LoginPageState extends State<LoginPage> {
             style: TextStyle(
               fontFamily: 'Source Serif',
               fontWeight: FontWeight.bold,
+              color: Color(0xff6a0dad),
               decoration: TextDecoration.underline,
               decorationColor: Color(0xff6a0dad),
               fontSize: isWide ? 16 : 14,
@@ -245,13 +282,36 @@ class _LoginPageState extends State<LoginPage> {
           decoration: BoxDecoration(
             border: Border.all(color: Color(0xff6a0dad), width: 1),
             borderRadius: BorderRadius.circular(12.5),
+            boxShadow: [
+              BoxShadow(
+                color: Color(0x88888888),
+                offset: Offset(0, 5),
+                blurRadius: 10,
+                spreadRadius: 2,
+              ),
+            ],
           ),
           child: Column(
-            children: accounts.map((acc) {
-              return ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: listWidth),
+            children: List.generate(accounts.length, (index) {
+              final acc = accounts[index];
+
+              BorderRadius tileRadius;
+              if (index == 0) {
+                tileRadius = BorderRadius.vertical(top: Radius.circular(12.5));
+              } else if (index == accounts.length - 1) {
+                tileRadius = BorderRadius.vertical(
+                  bottom: Radius.circular(12.5),
+                );
+              } else {
+                tileRadius = BorderRadius.zero;
+              }
+
+              return Material(
+                color: Colors.grey[50],
+                borderRadius: tileRadius,
+                clipBehavior: Clip.hardEdge,
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(12.5),
+                  borderRadius: tileRadius,
                   onTap: () {
                     setState(() {
                       selectedAccountEmail = acc['email'];
@@ -288,7 +348,6 @@ class _LoginPageState extends State<LoginPage> {
                                   fontFamily: 'Source Serif',
                                   fontSize: isWide ? 14 : 12,
                                   color: Color(0xff6a0dad),
-                                  decoration: TextDecoration.underline,
                                   decorationColor: Color(0xff6a0dad),
                                 ),
                               ),
@@ -300,7 +359,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               );
-            }).toList(),
+            }),
           ),
         ),
         SizedBox(height: isWide ? 100 : 50),
