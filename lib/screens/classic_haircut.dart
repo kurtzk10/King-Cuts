@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kingscut/screens/service_page.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:kingscut/screens/service_page.dart';
+import 'package:kingscut/screens/barber.dart';
 
 class ClassicHaircutPage extends StatefulWidget {
   final String? email;
@@ -117,100 +118,128 @@ class _ClassicHaircutPageState extends State<ClassicHaircutPage> {
                         height: isWide
                             ? screenHeight * 0.5
                             : screenHeight * 0.35,
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            CarouselSlider(
-                              options: CarouselOptions(
-                                height: isWide
-                                    ? screenHeight * 0.5
-                                    : screenHeight * 0.35,
-                                viewportFraction: 1.0,
-                                enableInfiniteScroll: true,
-                                onPageChanged: (index, reason) {
-                                  setState(() {
-                                    currentIndices[i] = index;
-                                  });
-                                },
-                              ),
-                              items: images.map((img) {
-                                return Builder(
-                                  builder: (BuildContext context) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          selectedImage = img;
-                                        });
-                                      },
-                                      child: Container(
-                                        width: double.infinity,
-                                        child: Image.asset(
-                                          img,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              }).toList(),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0x88888888),
+                              offset: Offset(0, 5),
+                              blurRadius: 10,
+                              spreadRadius: 2,
                             ),
-                            Positioned(
-                              top: 10,
-                              left: 0,
-                              right: 0,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: images.asMap().entries.map((entry) {
-                                  return Container(
-                                    width: 8,
-                                    height: 8,
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: currentIndices[i] == entry.key
-                                          ? Colors.white
-                                          : Color(0x71ffffff),
-                                    ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12.5),
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              CarouselSlider(
+                                options: CarouselOptions(
+                                  height: isWide
+                                      ? screenHeight * 0.5
+                                      : screenHeight * 0.35,
+                                  viewportFraction: 1.0,
+                                  enableInfiniteScroll: true,
+                                  onPageChanged: (index, reason) {
+                                    setState(() {
+                                      currentIndices[i] = index;
+                                    });
+                                  },
+                                ),
+                                items: images.map((img) {
+                                  return Builder(
+                                    builder: (BuildContext context) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedImage = img;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: double.infinity,
+                                          child: Image.asset(
+                                            img,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   );
                                 }).toList(),
                               ),
-                            ),
-                            Positioned(
-                              bottom: isWide ? 10 : 2,
-                              left: 10,
-                              right: 10,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    cut,
-                                    style: TextStyle(
-                                      fontFamily: 'Source Serif',
-                                      color: Color(0xff6a0dad),
-                                      fontSize: isWide ? 20 : 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {},
-                                    style: TextButton.styleFrom(
-                                      backgroundColor: Color(0xff6a0dad),
-                                      foregroundColor: Colors.white,
-                                    ),
-                                    child: Text(
-                                      'Get $cut | P$price',
+                              Positioned(
+                                top: 10,
+                                left: 0,
+                                right: 0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: images.asMap().entries.map((entry) {
+                                    return Container(
+                                      width: 8,
+                                      height: 8,
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: currentIndices[i] == entry.key
+                                            ? Colors.white
+                                            : Color(0x71ffffff),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: isWide ? 10 : 2,
+                                left: 10,
+                                right: 10,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      cut,
                                       style: TextStyle(
-                                        fontSize: isWide ? 16 : 12,
+                                        fontFamily: 'Source Serif',
+                                        color: Color(0xff6a0dad),
+                                        fontSize: isWide ? 20 : 16,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          PageRouteBuilder(
+                                            pageBuilder: (_, __, ___) =>
+                                                BarberPage(
+                                                  type: 'Classic Haircut',
+                                                  cut: cut,
+                                                  price: price,
+                                                  email: email!,
+                                                ),
+                                            transitionDuration: Duration.zero,
+                                          ),
+                                        );
+                                      },
+                                      style: TextButton.styleFrom(
+                                        backgroundColor: Color(0xff6a0dad),
+                                        foregroundColor: Colors.white,
+                                      ),
+                                      child: Text(
+                                        'Get $cut | P$price',
+                                        style: TextStyle(
+                                          fontSize: isWide ? 16 : 12,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     }),
