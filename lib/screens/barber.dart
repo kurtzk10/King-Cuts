@@ -22,6 +22,7 @@ class BarberPage extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final isWide = screenWidth > 600;
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         forceMaterialTransparency: true,
         leading: Container(
@@ -92,6 +93,7 @@ class BarberPage extends StatelessWidget {
                   ),
                 ],
               ),
+              SizedBox(height: 20),
               Center(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -116,7 +118,7 @@ class BarberPage extends StatelessWidget {
                           children: [
                             BarberCard(
                               name: 'Icent',
-                              imagePath: 'assets/carousel-pic-1.jpg',
+                              imagePath: 'assets/icent.jpg',
                               width: 500,
                               email: email,
                               type: type,
@@ -125,7 +127,7 @@ class BarberPage extends StatelessWidget {
                             ),
                             BarberCard(
                               name: 'Keane',
-                              imagePath: 'assets/carousel-pic-1.jpg',
+                              imagePath: 'assets/keane.jpg',
                               width: 500,
                               email: email,
                               type: type,
@@ -134,7 +136,7 @@ class BarberPage extends StatelessWidget {
                             ),
                             BarberCard(
                               name: 'Kian',
-                              imagePath: 'assets/carousel-pic-1.jpg',
+                              imagePath: 'assets/kian.jpg',
                               width: 500,
                               email: email,
                               type: type,
@@ -143,7 +145,7 @@ class BarberPage extends StatelessWidget {
                             ),
                             BarberCard(
                               name: 'Kurt',
-                              imagePath: 'assets/carousel-pic-1.jpg',
+                              imagePath: 'assets/kurt.jpg',
                               width: 500,
                               email: email,
                               type: type,
@@ -193,7 +195,7 @@ class BarberCard extends StatelessWidget {
           context,
           PageRouteBuilder(
             pageBuilder: (_,__,___) =>
-              CalendarPage(email: email, barberName: name, cut: cut, price: price),
+              CalendarPage(email: email, type: type, barberName: name, cut: cut, price: price),
               transitionDuration: Duration.zero,
           ),
         );

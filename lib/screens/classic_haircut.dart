@@ -14,11 +14,32 @@ class ClassicHaircutPage extends StatefulWidget {
 class _ClassicHaircutPageState extends State<ClassicHaircutPage> {
   String? get email => widget.email;
 
-  final List<String> images = [
-    'assets/carousel-pic-1.jpg',
-    'assets/carousel-pic-2.jpg',
-    'assets/carousel-pic-3.jpg',
-    'assets/carousel-pic-4.jpg',
+  final List<List<String>> images = [
+    [
+      'assets/fade-1.jpg',
+      'assets/fade-2.jpg',
+      'assets/fade-3.jpg',
+      'assets/fade-4.jpg',
+    ],
+    [
+      'assets/buzz-1.jpg',
+      'assets/buzz-2.jpg',
+      'assets/buzz-3.jpg',
+      'assets/buzz-4.jpg',
+    ],
+    [
+      'assets/crew-1.jpg',
+      'assets/crew-2.jpg',
+      'assets/crew-3.jpg',
+      'assets/crew-4.jpg',
+    ],
+    [
+      'assets/mullet-1.jpg',
+      'assets/mullet-2.jpg',
+      'assets/mullet-3.jpg',
+      'assets/mullet-4.jpg',
+    ]
+
   ];
 
   final List<String> cuts = ['Fade', 'Buzz Cut', 'Crew Cut', 'Mullet'];
@@ -34,6 +55,7 @@ class _ClassicHaircutPageState extends State<ClassicHaircutPage> {
     final isWide = screenWidth > 600;
 
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         forceMaterialTransparency: true,
         leading: Container(
@@ -95,6 +117,7 @@ class _ClassicHaircutPageState extends State<ClassicHaircutPage> {
                     ),
                   ],
                 ),
+                SizedBox(height: 20),
                 Text(
                   'Classic Haircuts',
                   style: TextStyle(
@@ -147,7 +170,7 @@ class _ClassicHaircutPageState extends State<ClassicHaircutPage> {
                                     });
                                   },
                                 ),
-                                items: images.map((img) {
+                                items: images[i].map((img) {
                                   return Builder(
                                     builder: (BuildContext context) {
                                       return GestureDetector(

@@ -3,7 +3,7 @@ import 'package:kingscut/screens/service_page.dart';
 
 class ReviewsPage extends StatefulWidget {
   final String? email;
-  const ReviewsPage({required this.email});
+  const ReviewsPage({super.key, required this.email});
 
   @override
   _ReviewsPageState createState() => _ReviewsPageState();
@@ -12,9 +12,14 @@ class ReviewsPage extends StatefulWidget {
 class _ReviewsPageState extends State<ReviewsPage> {
   String? get email => widget.email;
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _reviewController = TextEditingController();
 
   String? selectedType;
   String? selectedBarber;
+  String? _errorMessage;
+  String? _serviceError;
+  String? _barberError;
+
   var serviceTypes = ['Classic Haircut', 'Beard Grooming', 'Tailored Cut'];
   var barbers = ['Icent', 'Keane', 'Kian', 'Kurt'];
 
@@ -24,17 +29,18 @@ class _ReviewsPageState extends State<ReviewsPage> {
     final isWide = screenWidth > 600;
 
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         forceMaterialTransparency: true,
         leading: Container(
-          margin: EdgeInsets.only(left: 6, top: 11),
+          margin: const EdgeInsets.only(left: 6, top: 11),
           child: Image.asset('assets/logo_black.png', height: 20, width: 20),
         ),
         leadingWidth: 50,
         toolbarHeight: 70,
         titleSpacing: 0,
         title: Padding(
-          padding: EdgeInsets.only(top: 12),
+          padding: const EdgeInsets.only(top: 12),
           child: const Text(
             "King Cuts",
             style: TextStyle(
@@ -45,7 +51,6 @@ class _ReviewsPageState extends State<ReviewsPage> {
           ),
         ),
       ),
-
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -58,18 +63,19 @@ class _ReviewsPageState extends State<ReviewsPage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => ServicePage(email: email),
+                      PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => ServicePage(email: email),
+                        transitionDuration: Duration.zero,
                       ),
                     );
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.arrow_back,
                     color: Color(0xff6a0dad),
                     size: 32,
                   ),
                 ),
-                Text(
+                const Text(
                   'Services',
                   style: TextStyle(
                     fontFamily: 'Source Serif',
@@ -80,7 +86,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Padding(
               padding: isWide
                   ? EdgeInsets.symmetric(horizontal: screenWidth * 0.25)
@@ -93,50 +99,89 @@ class _ReviewsPageState extends State<ReviewsPage> {
                       'Write a review',
                       style: TextStyle(
                         fontFamily: 'Source Serif',
-                        color: Color(0xff6a0dad),
+                        color: const Color(0xff6a0dad),
                         fontWeight: FontWeight.bold,
                         fontSize: isWide ? 30 : 24,
                       ),
                     ),
-                    SizedBox(height: 20),
-                    TextFormField(
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 16),
-                      minLines: 5,
-                      maxLines: 5,
-                      decoration: InputDecoration(
-                        labelText: 'Tell others about your experience',
-                        floatingLabelStyle: TextStyle(color: Color(0xff6a0dad)),
-                        alignLabelWithHint: true,
-                        labelStyle: TextStyle(
-                          fontSize: 16,
-                          color: Color(0xff6a0dad),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xff6a0dad)),
-                          borderRadius: BorderRadius.circular(12.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xff6a0dad),
-                            width: 2,
+                    const SizedBox(height: 20),
+                    Container(
+                      margin: const EdgeInsets.only(right: 5),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[50],
+                        borderRadius: BorderRadius.circular(12.5),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x88888888),
+                            offset: Offset(0, 5),
+                            blurRadius: 10,
+                            spreadRadius: 2,
                           ),
-                          borderRadius: BorderRadius.circular(12.5),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xff6a0dad)),
-                          borderRadius: BorderRadius.circular(12.5),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xff6a0dad)),
-                          borderRadius: BorderRadius.circular(12.5),
+                        ],
+                      ),
+                      child: TextFormField(
+                        controller: _reviewController,
+                        minLines: 5,
+                        maxLines: 5,
+                        style: const TextStyle(fontSize: 16),
+                        decoration: InputDecoration(
+                          alignLabelWithHint: true,
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 16,
+                            horizontal: 12,
+                          ),
+                          labelText: 'Tell others about your experience',
+                          floatingLabelStyle: const TextStyle(
+                            color: Color(0xff6a0dad),
+                          ),
+                          labelStyle: const TextStyle(
+                            fontSize: 16,
+                            color: Color(0xff6a0dad),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xff6a0dad)),
+                            borderRadius: BorderRadius.circular(12.5),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color: Color(0xff6a0dad),
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(12.5),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color: Color(0xff6a0dad),
+                            ),
+                            borderRadius: BorderRadius.circular(12.5),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color: Color(0xff6a0dad),
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(12.5),
+                          ),
                         ),
                       ),
-                      validator: (value) =>
-                          value!.isEmpty ? "Field can't be left blank" : null,
                     ),
-                    SizedBox(height: 10),
-
+                    if (_errorMessage != null)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 20,
+                            child: Text(
+                              _errorMessage!,
+                              style: const TextStyle(
+                                color: Color(0xffB3261E),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: isWide
                           ? MainAxisAlignment.spaceEvenly
@@ -146,211 +191,239 @@ class _ReviewsPageState extends State<ReviewsPage> {
                           width: (isWide
                               ? screenWidth * 0.2
                               : screenWidth * 0.45),
-                          child: FormField<String>(
-                            validator: (value) {
-                              if (selectedType == null ||
-                                  selectedType!.isEmpty) {
-                                return 'Select a service';
-                              }
-                              return null;
-                            },
-                            builder: (FormFieldState<String> state) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  DropdownMenu<String>(
-                                    width: (isWide
-                                        ? screenWidth * 0.2
-                                        : screenWidth * 0.45),
-                                    label: Text(
-                                      "Service Type",
-                                      style: TextStyle(
-                                        color: Color(0xff6a0dad),
-                                        fontSize: 14,
-                                      ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12.5),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color(0x88888888),
+                                      offset: Offset(0, 5),
+                                      blurRadius: 10,
+                                      spreadRadius: 2,
                                     ),
-                                    textStyle: TextStyle(fontSize: 14),
-                                    inputDecorationTheme: InputDecorationTheme(
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(
-                                          12.5,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xff6a0dad),
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                          12.5,
-                                        ),
-                                      ),
+                                  ],
+                                ),
+                                child: DropdownMenu<String>(
+                                  width: (isWide
+                                      ? screenWidth * 0.2
+                                      : screenWidth * 0.45),
+                                  label: const Text(
+                                    "Service Type",
+                                    style: TextStyle(
+                                      color: Color(0xff6a0dad),
+                                      fontSize: 14,
                                     ),
-                                    dropdownMenuEntries: serviceTypes
-                                        .map(
-                                          (service) => DropdownMenuEntry(
-                                            value: service,
-                                            label: service,
-                                          ),
-                                        )
-                                        .toList(),
-                                    onSelected: (value) {
-                                      setState(() {
-                                        selectedType = value;
-                                      });
-                                      state.didChange(value);
-                                    },
                                   ),
-                                  if (state.hasError)
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 16,
-                                        top: 4,
+                                  textStyle: const TextStyle(fontSize: 14),
+                                  inputDecorationTheme: InputDecorationTheme(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.5),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0xff6a0dad),
                                       ),
-                                      child: Text(
-                                        state.errorText!,
-                                        style: TextStyle(
-                                          color: Color(0xffB3261E),
-                                          fontSize: 12,
+                                      borderRadius: BorderRadius.circular(12.5),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: Color(0xff6a0dad),
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(12.5),
+                                    ),
+                                  ),
+                                  dropdownMenuEntries: serviceTypes
+                                      .map(
+                                        (service) => DropdownMenuEntry(
+                                          value: service,
+                                          label: service,
                                         ),
-                                      ),
-                                    )
-                                  else
-                                    const SizedBox(height: 20),
-                                ],
-                              );
-                            },
+                                      )
+                                      .toList(),
+                                  onSelected: (value) {
+                                    setState(() {
+                                      selectedType = value;
+                                      _serviceError = null;
+                                    });
+                                  },
+                                ),
+                              ),
+                              if (_serviceError != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 16,
+                                    top: 4,
+                                  ),
+                                  child: Text(
+                                    _serviceError!,
+                                    style: const TextStyle(
+                                      color: Color(0xffB3261E),
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                )
+                              else
+                                const SizedBox(height: 20),
+                            ],
                           ),
                         ),
                         SizedBox(
                           width: (isWide
                               ? screenWidth * 0.2
                               : screenWidth * 0.45),
-                          child: FormField<String>(
-                            validator: (value) {
-                              if (selectedBarber == null ||
-                                  selectedBarber!.isEmpty) {
-                                return 'Select a barber';
-                              }
-                              return null;
-                            },
-                            builder: (FormFieldState<String> state) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  DropdownMenu<String>(
-                                    width: (isWide
-                                        ? screenWidth * 0.2
-                                        : screenWidth * 0.45),
-                                    label: Text(
-                                      "Barber",
-                                      style: TextStyle(
-                                        color: Color(0xff6a0dad),
-                                        fontSize: 14,
-                                      ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12.5),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color(0x88888888),
+                                      offset: Offset(0, 5),
+                                      blurRadius: 10,
+                                      spreadRadius: 2,
                                     ),
-                                    textStyle: TextStyle(fontSize: 14),
-                                    inputDecorationTheme: InputDecorationTheme(
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(
-                                          12.5,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xff6a0dad),
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                          12.5,
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xff6a0dad),
-                                          width: 2,
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                          12.5,
-                                        ),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xff6a0dad),
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                          12.5,
-                                        ),
-                                      ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xff6a0dad),
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                          12.5,
-                                        ),
-                                      ),
+                                  ],
+                                ),
+                                child: DropdownMenu<String>(
+                                  width: (isWide
+                                      ? screenWidth * 0.2
+                                      : screenWidth * 0.45),
+                                  label: const Text(
+                                    "Barber",
+                                    style: TextStyle(
+                                      color: Color(0xff6a0dad),
+                                      fontSize: 14,
                                     ),
-                                    dropdownMenuEntries: barbers
-                                        .map(
-                                          (barber) => DropdownMenuEntry(
-                                            value: barber,
-                                            label: barber,
-                                          ),
-                                        )
-                                        .toList(),
-                                    onSelected: (value) {
-                                      setState(() {
-                                        selectedBarber = value;
-                                      });
-                                      state.didChange(value);
-                                    },
                                   ),
-                                  if (state.hasError)
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 16,
-                                        top: 4,
+                                  textStyle: const TextStyle(fontSize: 14),
+                                  inputDecorationTheme: InputDecorationTheme(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.5),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0xff6a0dad),
                                       ),
-                                      child: Text(
-                                        state.errorText!,
-                                        style: TextStyle(
-                                          color: Color(0xffB3261E),
-                                          fontSize: 12,
+                                      borderRadius: BorderRadius.circular(12.5),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: Color(0xff6a0dad),
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(12.5),
+                                    ),
+                                  ),
+                                  dropdownMenuEntries: barbers
+                                      .map(
+                                        (barber) => DropdownMenuEntry(
+                                          value: barber,
+                                          label: barber,
                                         ),
-                                      ),
-                                    )
-                                  else
-                                    const SizedBox(height: 16),
-                                ],
-                              );
-                            },
+                                      )
+                                      .toList(),
+                                  onSelected: (value) {
+                                    setState(() {
+                                      selectedBarber = value;
+                                      _barberError = null;
+                                    });
+                                  },
+                                ),
+                              ),
+                              if (_barberError != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 16,
+                                    top: 4,
+                                  ),
+                                  child: Text(
+                                    _barberError!,
+                                    style: const TextStyle(
+                                      color: Color(0xffB3261E),
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                )
+                              else
+                                const SizedBox(height: 16),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        minimumSize: Size(200, 50),
-                        side: BorderSide(color: Color(0xff6a0dad), width: 1),
+                    const SizedBox(height: 10),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[50],
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x88888888),
+                            offset: Offset(0, 5),
+                            blurRadius: 10,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(25),
                       ),
-                      child: const Text('Submit'),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                        }
-                      },
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          minimumSize: const Size(200, 50),
+                          backgroundColor: const Color(0xff6a0dad),
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text('Submit'),
+                        onPressed: () {
+                          setState(() {
+                            // Reset all error messages
+                            _errorMessage = null;
+                            _serviceError = null;
+                            _barberError = null;
+                          });
+
+                          bool isValid = true;
+                          if (_reviewController.text.isEmpty) {
+                            setState(() {
+                              _errorMessage = "Field can't be left blank";
+                            });
+                            isValid = false;
+                          }
+                          if (selectedType == null || selectedType!.isEmpty) {
+                            setState(() {
+                              _serviceError = "Select a service";
+                            });
+                            isValid = false;
+                          }
+                          if (selectedBarber == null ||
+                              selectedBarber!.isEmpty) {
+                            setState(() {
+                              _barberError = "Select a barber";
+                            });
+                            isValid = false;
+                          }
+
+                          if (isValid) _showDialog(context);
+                        },
+                      ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Text(
                       'What others say',
                       style: TextStyle(
                         fontFamily: 'Source Serif',
-                        color: Color(0xff6a0dad),
+                        color: const Color(0xff6a0dad),
                         fontWeight: FontWeight.bold,
                         fontSize: isWide ? 30 : 24,
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -387,8 +460,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
                         ReviewCard(
                           name: 'Allan Miranda',
                           stars: 4,
-                          content:
-                              'cut so fire🔥🔥🔥',
+                          content: 'cut so fire🔥🔥🔥',
                           type: 'Tailored Cut',
                           barber: 'Kurt',
                           isWide: true,
@@ -397,14 +469,13 @@ class _ReviewsPageState extends State<ReviewsPage> {
                         ReviewCard(
                           name: 'Kai Sotto',
                           stars: 5,
-                          content:
-                              'kaiju here. i freaking love king cuts 🥰😻',
+                          content: 'kaiju here. i freaking love king cuts 🥰😻',
                           type: 'Tailored Cut',
                           barber: 'Kurt',
                           isWide: true,
                           screenWidth: screenWidth,
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ],
@@ -442,10 +513,19 @@ class ReviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-      margin: EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+      margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xff6a0dad), width: 1),
+        color: Colors.grey[50],
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x88888888),
+            offset: Offset(0, 5),
+            blurRadius: 10,
+            spreadRadius: 2,
+          ),
+        ],
+        border: Border.all(color: const Color(0xff6a0dad), width: 1),
         borderRadius: BorderRadius.circular(12.5),
       ),
       child: Column(
@@ -453,7 +533,7 @@ class ReviewCard extends StatelessWidget {
         children: [
           Text(
             name,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'Source Serif',
               color: Color(0xff6a0dad),
               fontSize: 18,
@@ -463,9 +543,13 @@ class ReviewCard extends StatelessWidget {
           Row(
             children: List.generate(5, (index) {
               if (index < stars) {
-                return Icon(Icons.star, color: Color(0xff6a0dad), size: 16);
+                return const Icon(
+                  Icons.star,
+                  color: Color(0xff6a0dad),
+                  size: 16,
+                );
               } else {
-                return Icon(
+                return const Icon(
                   Icons.star_border,
                   color: Color(0xff6a0dad),
                   size: 16,
@@ -473,22 +557,22 @@ class ReviewCard extends StatelessWidget {
               }
             }),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             content,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'Source Serif',
               color: Color(0xff6a0dad),
               fontSize: 16,
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Barber: $barber',
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Source Serif',
                   color: Color(0xff6a0dad),
                   fontSize: 16,
@@ -496,7 +580,7 @@ class ReviewCard extends StatelessWidget {
               ),
               Text(
                 'Service: $type',
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Source Serif',
                   color: Color(0xff6a0dad),
                   fontSize: 16,
@@ -508,4 +592,30 @@ class ReviewCard extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text(
+          'Submitted!',
+          style: TextStyle(
+            fontFamily: 'Source Serif',
+            color: Color(0xff6a0dad),
+          ),
+        ),
+        content: const Text('Your review has been submitted for review.'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

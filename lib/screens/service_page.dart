@@ -15,6 +15,7 @@ class ServicePage extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         forceMaterialTransparency: true,
         leading: Container(

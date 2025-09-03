@@ -14,11 +14,12 @@ class TailoredCutPage extends StatefulWidget {
 class _TailoredCutPageState extends State<TailoredCutPage> {
   String? get email => widget.email;
 
-  final List<String> images = [
-    'assets/carousel-pic-1.jpg',
-    'assets/carousel-pic-2.jpg',
-    'assets/carousel-pic-3.jpg',
-    'assets/carousel-pic-4.jpg',
+  final List<List<String>> images = [
+    ['consult.jpg'],
+    ['assets/tailored-1.jpg',
+    'assets/tailored-2.jpg',
+    'assets/tailored-3.jpg',
+    'assets/tailored-4.jpg',],
   ];
 
   final List<String> cuts = ['Consultation + Cut', 'King Custom Cuts'];
@@ -34,6 +35,7 @@ class _TailoredCutPageState extends State<TailoredCutPage> {
     final isWide = screenWidth > 600;
 
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         forceMaterialTransparency: true,
         leading: Container(
@@ -95,6 +97,7 @@ class _TailoredCutPageState extends State<TailoredCutPage> {
                     ),
                   ],
                 ),
+                SizedBox(height: 20),
                 Text(
                   'Tailored Cuts',
                   style: TextStyle(
@@ -140,14 +143,17 @@ class _TailoredCutPageState extends State<TailoredCutPage> {
                                       ? screenHeight * 0.5
                                       : screenHeight * 0.35,
                                   viewportFraction: 1.0,
-                                  enableInfiniteScroll: true,
+                                  enableInfiniteScroll: images[i].length > 1,
+                                  scrollPhysics: images[i].length > 1
+                                  ? null
+                                  : NeverScrollableScrollPhysics(),
                                   onPageChanged: (index, reason) {
                                     setState(() {
                                       currentIndices[i] = index;
                                     });
                                   },
                                 ),
-                                items: images.map((img) {
+                                items: images[i].map((img) {
                                   return Builder(
                                     builder: (BuildContext context) {
                                       return GestureDetector(
@@ -168,29 +174,32 @@ class _TailoredCutPageState extends State<TailoredCutPage> {
                                   );
                                 }).toList(),
                               ),
-                              Positioned(
-                                top: 10,
-                                left: 0,
-                                right: 0,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: images.asMap().entries.map((entry) {
-                                    return Container(
-                                      width: 8,
-                                      height: 8,
-                                      margin: const EdgeInsets.symmetric(
-                                        horizontal: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: currentIndices[i] == entry.key
-                                            ? Colors.white
-                                            : Color(0x71ffffff),
-                                      ),
-                                    );
-                                  }).toList(),
+                              if (images[i].length > 1)
+                                Positioned(
+                                  top: 10,
+                                  left: 0,
+                                  right: 0,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: images[i].asMap().entries.map((
+                                      entry,
+                                    ) {
+                                      return Container(
+                                        width: 8,
+                                        height: 8,
+                                        margin: const EdgeInsets.symmetric(
+                                          horizontal: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: currentIndices[i] == entry.key
+                                              ? Colors.white
+                                              : Color(0x71ffffff),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
                                 ),
-                              ),
                               Positioned(
                                 bottom: isWide ? 10 : 2,
                                 left: 10,

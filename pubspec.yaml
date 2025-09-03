@@ -37,6 +37,7 @@ dependencies:
   carousel_slider: ^5.1.1
   url_launcher: ^6.3.2
   table_calendar: ^3.2.0
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +67,44 @@ flutter:
     - assets/carousel-pic-2.jpg
     - assets/carousel-pic-3.jpg
     - assets/carousel-pic-4.jpg
+    - assets/fade-1.jpg
+    - assets/fade-2.jpg
+    - assets/fade-3.jpg
+    - assets/fade-4.jpg
+    - assets/buzz-1.jpg
+    - assets/buzz-2.jpg
+    - assets/buzz-3.jpg
+    - assets/buzz-4.jpg
+    - assets/crew-1.jpg
+    - assets/crew-2.jpg
+    - assets/crew-3.jpg
+    - assets/crew-4.jpg
+    - assets/mullet-1.jpg
+    - assets/mullet-2.jpg
+    - assets/mullet-3.jpg
+    - assets/mullet-4.jpg
+    - assets/consult.jpg
+    - assets/tailored-1.jpg
+    - assets/tailored-2.jpg
+    - assets/tailored-3.jpg
+    - assets/tailored-4.jpg
+    - assets/trim-1.jpg
+    - assets/trim-2.jpg
+    - assets/trim-3.jpg
+    - assets/trim-4.jpg
+    - assets/lineup-1.jpg
+    - assets/lineup-2.jpg
+    - assets/lineup-3.jpg
+    - assets/lineup-4.jpg
+    - assets/design-1.jpg
+    - assets/design-2.jpg
+    - assets/design-3.jpg
+    - assets/design-4.jpg
+    - assets/hot-towel.jpg
+    - assets/icent.jpg
+    - assets/keane.jpg
+    - assets/kian.jpg
+    - assets/kurt.jpg
   fonts:
     - family: Judson
       fonts:

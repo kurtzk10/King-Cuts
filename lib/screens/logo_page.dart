@@ -35,6 +35,7 @@ class _LogoPageState extends State<LogoPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       body: Center(
         child: AnimatedOpacity(
           duration: Duration(seconds: 1),

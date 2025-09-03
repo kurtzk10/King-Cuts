@@ -32,6 +32,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
     final horizontalPadding = screenWidth * 0.05;
 
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         forceMaterialTransparency: true,
         leading: Container(
